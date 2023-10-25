@@ -1,1 +1,273 @@
+-- Here collection is the name of table
+
+db.collection.insert({emp_name:"Amir",branch:[{building: "Galleria",area: "Vile parle", city: "Mumbai"}], project:["HR development","Bank management"], experience:6,city: "Mumbai"})
+
+db.collection.insert({emp_name:"Rahul",branch:{building: "Mansarovar", city: "kota"}, project:["Education system","E-commerce"], experience:4,city: "Jaipur"})
+
+db.collection.insert({emp_name:"Vidhaan",branch:{block_no: "F96", area: "Kirti nagar" ,city: "Delhi"}, project:["Web design","Dairy management", "E-commerce"], experience:10,city: "Delhi"})
+
+-- Display all the documents
+db.collection.find()
+
+--Increase the experience of Amir to 7 years
+db.collection.update({emp_name: {$eq: "Amir"}}, {$set: { experience: 7}})
+db.collection.find()
+
+-- Display employees who work on project of e-commerce
+db.collection.find({project: "E-commerce"})
+
+
+-- 2nd Question
+
+db.teachers.insert({Teacher: "Soham", expertise: ["Java","Python","Database"], class: ["FYB.Sc","SYBSc","M.Sc-I"], experience: 7, college:"Mithibai"})
+
+db.teachers.insert({Teacher: "Radha", expertise: ["Data Science","Database"], class: ["TYBSc","M.Sc-II","M.Sc-I"], experience: 5, college:"NM"})
+
+db.teachers.insert({Teacher: "Sita", expertise: ["Java","Python"], class: ["TYBSc","M.Sc-II","M.Sc-I","FYBSc"], experience: 1, college:"UPG"})
+
+
+-- drop collection
+db.teachers.drop()
+
+
+-- Insert documents using multi-document insert
+
+var data = [
+
+{
+        
+        "Teacher" : "Soham",
+        "expertise" : [
+                "Java",
+                "Python",
+                "Database"
+        ],
+        "class" : [
+                "FYB.Sc",
+                "SYBSc",
+                "M.Sc-I"
+        ],
+        "experience" : 7,
+        "college" : "Mithibai"
+},
+{
+
+        "Teacher" : "Radha",
+        "expertise" : [
+                "Data Science",
+                "Database"
+        ],
+        "class" : [
+                "TYBSc",
+                "M.Sc-II",
+                "M.Sc-I"
+        ],
+        "experience" : 5,
+        "college" : "NM"
+},
+{
+
+        "Teacher" : "Sita",
+        "expertise" : [
+                "Java",
+                "Python"
+        ],
+        "class" : [
+                "TYBSc",
+                "M.Sc-II",
+                "M.Sc-I",
+                "FYBSc"
+        ],
+        "experience" : 1,
+        "college" : "UPG"
+}
+
+];
+
+db.teachers.insert(data);
+
+
+-- Using insertmany method
+
+db.teachers.insertMany(
+
+[
+
+{
+        
+        "Teacher" : "Soham",
+        "expertise" : [
+                "Java",
+                "Python",
+                "Database"
+        ],
+        "class" : [
+                "FYB.Sc",
+                "SYBSc",
+                "M.Sc-I"
+        ],
+        "experience" : 7,
+        "college" : "Mithibai"
+},
+{
+
+        "Teacher" : "Radha",
+        "expertise" : [
+                "Data Science",
+                "Database"
+        ],
+        "class" : [
+                "TYBSc",
+                "M.Sc-II",
+                "M.Sc-I"
+        ],
+        "experience" : 5,
+        "college" : "NM"
+},
+{
+
+        "Teacher" : "Sita",
+        "expertise" : [
+                "Java",
+                "Python"
+        ],
+        "class" : [
+                "TYBSc",
+                "M.Sc-II",
+                "M.Sc-I",
+                "FYBSc"
+        ],
+        "experience" : 1,
+        "college" : "UPG"
+}
+
+]
+
+)
+
+
+-- multi-document insert using bulk insert
+
+-- here inventory is the name of the collections
+
+var bulk = db.inventory.initializeUnorderedBulkOp();
+
+bulk.insert({
+        
+        "Teacher" : "Soham",
+        "expertise" : [
+                "Java",
+                "Python",
+                "Database"
+        ],
+        "class" : [
+                "FYB.Sc",
+                "SYBSc",
+                "M.Sc-I"
+        ],
+        "experience" : 7,
+        "college" : "Mithibai"
+});
+
+bulk.insert(
+
+{
+
+        "Teacher" : "Radha",
+        "expertise" : [
+                "Data Science",
+                "Database"
+        ],
+        "class" : [
+                "TYBSc",
+                "M.Sc-II",
+                "M.Sc-I"
+        ],
+        "experience" : 5,
+        "college" : "NM"
+}
+
+);
+
+bulk.insert(
+
+{
+
+        "Teacher" : "Sita",
+        "expertise" : [
+                "Java",
+                "Python"
+        ],
+        "class" : [
+                "TYBSc",
+                "M.Sc-II",
+                "M.Sc-I",
+                "FYBSc"
+        ],
+        "experience" : 1,
+        "college" : "UPG"
+}
+
+);
+
+bulk.execute();
+
+-- show records
+-- pretty shows records with good indentations
+
+db.inventory.find().pretty()
+
+-- Remove he documents with expereience less than 2 years
+db.teachers.remove({experience: {$lt: 2}})
+
+
+-- display teachers who teach in TYBSc and M.Sc-i both
+db.teachers.find({$and:[{class:"M.Sc-I"},{class: "TYBSc"}]}).pretty()
+
+
+
+-- 3rd Question
+
+-- Inserting Values into collection
+
+db.orders.insert({order:"01", year: 2020, paid:"y", cost:{price: 30, currency: "NOK"}, items: {product:"p1", colours: ["blue", "black"], quantity: 15}, delivery_days: 5})
+
+db.orders.insert({order:"02", year: 2020, paid:"y", cost:{price: 13, currency: "EUR"}, items: [{product:"p2", colours: ["white"], quantity: 4}], delivery_days: 4})
+
+db.orders.insert({order:"03", year: 2018, paid:"n", cost:{price: 33, currency: "EUR"}, items: [{product:"p3", colours: ["blue", "black"], quantity: 4}], delivery_days: 4})
+
+db.orders.insert({order:"04", year: 2017, paid:"y", cost:{price: 17, currency: "NOK"}, items: [{product:"p2", colours: ["pink", "black"], quantity: 14}, {product: "p4", colours: ["white"], quantity: 1}], delivery_days: 4})
+
+db.orders.insert({order:"05", year: 2020, paid:"y", cost:{price: 19, currency: "NOK"}, items: [{product:"p1", quantity: 15}], delivery_days: 3})
+
+-- Retrieve all documents in a collection
+
+db.orders.find().pretty()
+
+-- Retrieve all documents that contain paid orders (the "paid" field is "y")
+
+db.orders.find({paid: "y"})
+
+-- Retrieve all documents that contain paid orders and the orders are from before 2019
+
+db.orders.find({$and:[{paid: "y"},{year: {$lt: 2019}}]})
+
+-- Retrieve all documents that contains unpaid orders or whose orders are from before 2019
+
+db.orders.find({$and:[{paid: "n"},{year: {$lt: 2019}}]})
+
+-- Retreive all documents that contain orders whose price is in NOK
+
+db.orders.find({"cost.currency": "NOK"})
+
+
+-- Retrieve all documetns that contain orders whose price is less than 18 NOK
+db.orders.find({$and:[{"cost.currency": "NOK"},{"cost.price": {$lt: 18}}]})
+
+
+-- Retrieve all the documents with orders that contain product "p2"
+db.orders.find({"items.product": "p2"})
+
+
+
 
