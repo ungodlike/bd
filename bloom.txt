@@ -1,0 +1,59 @@
+names = ["Jay","Bhavesh","Vednt","Onkar","Smit","Kriyanshi",
+         "Hritika","Satyhyaprakash","Gurshish","Swaroop","Satish"]
+test_names = ["Jay", "Bhavesh", "Amish", "Nishant"]
+def chrtodec(str):
+    dec = 0
+    base = ord('0')
+    for chr in str:
+        dec = dec * 10 + ord(chr) - base
+    return dec
+
+import numpy as np
+
+bit_vector = np.zeros(79)
+
+bit_vector
+
+def hash1(x):
+    return (x+1) % 79
+
+def hash2(x):
+    return (x^3 + 3) % 79
+
+def hash3(x):
+    return (x^2 + 2) % 79
+
+
+# Updating Bit Vector to store seen names
+for i in range(len(names)):
+    dec_rep = chrtodec(names[i])
+
+    hsh1 = hash1(dec_rep)
+
+    hsh2 = hash2(dec_rep)
+
+    hsh3 = hash3(dec_rep)
+
+    bit_vector[hsh1] = 1
+    bit_vector[hsh2] = 1
+    bit_vector[hsh3] = 1
+
+print(bit_vector)
+
+# Checking if the given name is present in the bit vector or not
+
+for i in range(len(test_names)):
+
+    dec_rep = chrtodec(test_names[i])
+
+    hsh1 = hash1(dec_rep)
+
+    hsh2 = hash2(dec_rep)
+
+    hsh3 = hash3(dec_rep)
+
+    if bit_vector[hsh1] == 1 and bit_vector[hsh2] == 1 and bit_vector[hsh3] == 1:
+        print(test_names[i], " has occured before")
+
+    else:
+        print(test_names[i], " has not occured yet")

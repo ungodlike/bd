@@ -1,0 +1,43 @@
+h1=[]
+h2=[]
+bins=[]
+bins2=[]
+elements=[3,1,4,1,5,9,2,6,5]
+print("hash function : (4*x) %32")
+for x in elements:
+  H_1 = (3*x+7)%32
+  H_2= (4*x) %32
+  h1.append(H_1)
+  h2.append(H_2)
+  bins.append(bin(H_1)[2:] )
+  bins2.append(format(H_2,"05b") )
+print('-'*20)
+print('H2\t  Bin')
+print('-'*20)
+for i,j in zip(h2,bins2):
+  print(i,'\t',j)
+print('-'*20)
+
+max_zeros = 0
+max_zeros_index = -1
+
+for i in range(len(bins2)):
+    row = bins2[i]
+    started_with_1 = False
+    current_zeros = 0
+    for bit in row:
+        if bit == '1':
+            started_with_1 = True
+            current_zeros = 0
+        elif started_with_1 and bit == '0':
+            current_zeros += 1
+            if current_zeros > max_zeros:
+                max_zeros = current_zeros
+                max_zeros_index = i
+r=h2[max_zeros_index]
+bintere=bins2[max_zeros_index]
+print('binary(max 0) :',bintere)
+print('r =',r)
+prob=2**r
+print('Probability that a random number ends in at least r zeros is 2^r : ',prob)
+print('-'*20)

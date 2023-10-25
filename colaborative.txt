@@ -1,0 +1,46 @@
+import pandas as pd
+import numpy as np
+
+# Define the number of movies and users
+num_movies = 10
+num_users = 10
+
+# Create a DataFrame with random values between 0 and 5
+data = np.random.uniform(0, 5, size=(num_movies, num_users))
+
+# Create column names for users (e.g., User1, User2, ...)
+user_columns = [f'User{i+1}' for i in range(num_users)]
+
+# Create a DataFrame with movie names as rows and user ratings as columns
+movie_names = [f'Movie{i+1}' for i in range(num_movies)]
+df = pd.DataFrame(data, columns=user_columns, index=movie_names)
+
+# Round the values to two decimal places
+df = df.round(2)
+
+# Display the DataFrame
+print(df)
+
+
+from sklearn.neighbors import NearestNeighbors
+knn = NearestNeighbors(metric='cosine', algorithm='brute')
+knn.fit(df.values)
+distances, indices = knn.kneighbors(df.values, n_neighbors=3)
+
+print(distances)
+print(indices)
+
+# get the index for 'movie_0'
+index_for_movie = df.index.tolist().index('Movie1')
+# find the indices for the similar movies
+sim_movies = indices[index_for_movie].tolist()
+# distances between 'movie_0' and the similar movies
+movie_distances = distances[index_for_movie].tolist()
+# the position of 'movie_0' in the list sim_movies
+id_movie = sim_movies.index(index_for_movie)
+# remove 'movie_0' from the list sim_movies
+sim_movies.remove(index_for_movie)
+# remove 'movie_0' from the list movie_distances
+movie_distances.pop(id_movie)
+print('The Nearest Movies to movie_0:', sim_movies)
+print('The Distance from movie_0:', movie_distances)

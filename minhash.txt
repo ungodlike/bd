@@ -1,0 +1,94 @@
+def read_file(file_path):
+    with open(file_path, 'r') as file:
+        content = file.read()
+    return content
+
+def tokenize_content(content):
+    # Split the content into individual words
+    words = content.split()
+    # Remove punctuation marks and convert words to lowercase (optional)
+    words = [word.strip('.,!?()[]{}"\'').lower() for word in words]
+    return words
+
+def generate_incidence_matrix(file_paths):
+    unique_words = set()
+    file_words = []
+
+    # Step 1: Read each file and tokenize its content
+    for file_path in file_paths:
+        content = read_file(file_path)
+        words = tokenize_content(content)
+        unique_words.update(words)
+        file_words.append(words)
+
+    # Step 2: Create the incidence matrix
+    incidence_matrix = []
+    for i in range(len(file_paths)):
+        incidence_row = []
+        for word in unique_words:
+            # Check if the word is present in the current file
+            incidence_row.append(1 if word in file_words[i] else 0)
+        incidence_matrix.append(incidence_row)
+
+    return incidence_matrix, list(unique_words)
+
+# List of file paths (update with your actual file paths)
+input_files = ["f1.txt", "f2.txt", "f3.txt"]
+
+incidence_matrix, words = generate_incidence_matrix(input_files)
+
+# Print the incidence matrix
+for i, file_path in enumerate(input_files):
+    print(f"Incidence row for {file_path}: {incidence_matrix[i]}")
+
+# Print the list of unique words
+print("Unique words:", words)
+print(incidence_matrix)
+
+def transpose(A):
+    B = [[0 for x in range(len(A))] for y in range(len(A[0]))]
+    for i in range(len(A[0])):
+        for j in range(len(A)):
+            B[i][j] = A[j][i]
+    return B
+
+incidence_matrix = transpose(incidence_matrix)
+
+print(incidence_matrix)
+
+def hash_function1(x):
+    return (x + 1) % 5
+
+def hash_function2(x):
+    return (3 * x + 1) % 5
+
+hash_value_1=[0 for i in range(len(incidence_matrix))]
+hash_value_2=[0 for i in range(len(incidence_matrix))]
+
+for i in range(len(incidence_matrix)):
+    hash_value_1[i]=hash_function1(i)
+for i in range(len(incidence_matrix)):
+    hash_value_2[i]=hash_function2(i)
+
+print(hash_value_1)
+print(hash_value_2)
+
+import numpy as np
+min_hash_sig = np.array([[10000 for i in range(len(incidence_matrix[0]))]]* 2)
+
+for i in range(len(incidence_matrix)):
+    for j in range(len(incidence_matrix[0])):
+        if incidence_matrix[i][j]==1:
+            #print(min_hash_sig[0][j],min_hash_sig[1][j])
+            min_hash_sig[0][j]=min(hash_value_1[i],min_hash_sig[0][j])
+
+print(min_hash_sig)
+
+for i in range(len(incidence_matrix)):
+    for k in range(len(incidence_matrix[0])):
+        if incidence_matrix[i][k]==1:
+            #print(min_hash_sig[0][j],min_hash_sig[1][j])
+            min_hash_sig[1][k]=min(hash_value_2[i],min_hash_sig[1][k])
+
+
+print(min_hash_sig)

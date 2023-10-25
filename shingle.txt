@@ -1,0 +1,52 @@
+########### For Word ###################
+Document = "abcdabd"
+k = 2
+from os import sched_get_priority_min
+def word_to_list(sent):
+  lit = [*sent]
+
+  return lit
+
+def unique(list1):
+
+    # insert the list to the set
+    list_set = set(list1)
+    # convert the set to the list
+    unique_list = (list(list_set))
+
+    return unique_list
+
+def list_to_shingles(input_list, k):
+    substrings = []
+    for i in range(len(input_list) - k + 1):
+        substring = "".join(input_list[i:i+k])
+        substrings.append(substring)
+
+    shingles = unique(substrings)
+    return shingles
+
+doc_list = word_to_list(Document)
+print(doc_list)
+shingles = list_to_shingles(doc_list, k)
+print(shingles)
+
+
+################### For Sentence ####################
+import regex as re
+sentence = "The Quick Brown Fox Jumps Over The Lazy Dog"
+def sent_to_list(sent):
+
+  word_list = sent.split()
+
+  return word_list
+
+def split_words_with_spaces(input_string):
+    # Use a regular expression pattern to match words with leading/trailing spaces
+    pattern = r'\b\s*\S+\s*\b'
+    word_list = re.findall(pattern, input_string)
+    return word_list
+
+sent_list = split_words_with_spaces(sentence)
+print(sent_list)
+shingles = list_to_shingles(sent_list, k)
+print(shingles)

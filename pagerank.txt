@@ -1,0 +1,55 @@
+import numpy as np
+matrix=np.array([[1,1,0],
+                [1,0,1],
+                  [1,1,1]])
+
+#matrix = np.array([[1,1,0],             [1,0,0],             [0,1,1]])
+
+matrix=matrix.astype(float)
+divby=[]
+row,column = matrix.shape
+count=0
+for i in matrix:
+    row_sum = np.sum(i)
+    divby.insert(0, row_sum)
+print("N rows",divby)
+for i in range(row):
+  for j in range(column):
+    matrix[i][j]=np.round(matrix[i][j]/divby[j],3)
+print(matrix)
+
+beta = 0.8
+onebyN=np.zeros((row,1))
+for i in range(len(onebyN)):
+  onebyN[i]=np.round(1/row,3)
+
+print(f"1/N \n{onebyN}\n")
+#Prob Trans Matrix
+A=np.round(np.multiply(beta,matrix) + np.multiply(1-beta,onebyN),3)
+
+print(f"Prob Trans Matrix\n{A}\n")
+vector=np.zeros((row,1))
+vector[row-1]=1
+New = np.array([1/row for i in range(len(matrix))]).reshape(len(matrix),1)
+print("Vector\n",vector)
+
+New = np.array([[0],[1],[0]])
+A = np.array([[0.33,0.467,0.067],[0.33,0.067,0.467],[0.33,0.467,0.467]])
+
+
+error = np.inf
+count = 0
+newArr = New
+while (error >= 0.0000000001):
+
+  oldArr = newArr
+  newArr = A @ oldArr
+
+  error = sum(abs(np.subtract(oldArr, newArr)))
+
+  print("new_array: ", newArr)
+  print("Error:", error)
+  print("~"*100)
+  count += 1
+
+print(f"It took {count} iterations to complete")

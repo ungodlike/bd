@@ -1,0 +1,82 @@
+from itertools import combinations
+
+transactions = [
+    ['apple', 'banana', 'cherry'],
+    ['banana', 'cherry', 'date'],
+    ['apple', 'cherry'],
+    ['apple', 'banana', 'date'],
+    ['apple', 'banana', 'cherry', 'date'],
+    ['cherry', 'date'],
+]
+
+min_support = 3
+
+min_confidence = 0.6
+
+def find_frequent_itemsets(transactions, min_support):
+    item_counts = {}
+    for transaction in transactions:
+        for item in transaction:
+            if item in item_counts:
+                item_counts[item] += 1
+            else:
+                item_counts[item] = 1
+
+    frequent_itemsets = {}
+    for item, count in item_counts.items():
+        if count >= min_support:
+            frequent_itemsets[frozenset([item])] = count
+
+    k = 2
+    while True:
+        candidates = generate_candidates(frequent_itemsets.keys(), k)
+        candidates_count = {candidate: 0 for candidate in candidates}
+
+        for transaction in transactions:
+            for candidate in candidates:
+                if candidate.issubset(set(transaction)):
+                    candidates_count[candidate] += 1
+
+        for candidate, count in candidates_count.items():
+            if count >= min_support:
+                frequent_itemsets[candidate] = count
+
+        if not candidates_count:
+            break
+
+        k += 1
+
+    return frequent_itemsets
+
+def generate_candidates(itemsets, k):
+    candidates = set()
+    for itemset1 in itemsets:
+        for itemset2 in itemsets:
+            if len(itemset1.union(itemset2)) == k:
+                candidates.add(itemset1.union(itemset2))
+    return candidates
+
+def generate_association_rules(frequent_itemsets, min_confidence):
+    association_rules = []
+    for itemset, support in frequent_itemsets.items():
+        if len(itemset) >= 2:
+            for i in range(1, len(itemset)):
+                for subset in combinations(itemset, i):
+                    antecedent = set(subset)
+                    consequent = itemset - antecedent
+                    confidence = support / frequent_itemsets[frozenset(antecedent)]
+                    if confidence >= min_confidence:
+                        association_rules.append((antecedent, consequent, confidence))
+    return association_rules
+
+frequent_itemsets = find_frequent_itemsets(transactions, min_support)
+
+association_rules = generate_association_rules(frequent_itemsets, min_confidence)
+
+print("Frequent Itemsets:")
+for itemset, support in frequent_itemsets.items():
+    print(f"{itemset}: Support = {support}")
+
+print("\nAssociation Rules:")
+for antecedent, consequent, confidence in association_rules:
+    print(f"{antecedent} => {consequent}: Confidence = {confidence}")
